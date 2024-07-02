@@ -1,6 +1,6 @@
 // Student ID: 20586501
 // Etox.cpp
-// 2B-GreenLab-02
+// 2B-BlueLab-02
 
 #include <iostream>
 #include <sstream>
