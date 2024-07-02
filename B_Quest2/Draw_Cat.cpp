@@ -8,11 +8,11 @@ using namespace std;
 
 void draw_cat() {
     
-    cout << " -------" << endl;
-    cout << "| /\\_/\\ |" << endl;
-    cout << "|( o o )|" << endl;
-    cout << "| > ^ < |" << endl;
-    cout << " -------" << endl;
+    cout << "  -------" << endl;
+    cout << " | /\\_/\\ |" << endl;
+    cout << " |( o o )|" << endl;
+    cout << " | > ^ < |" << endl;
+    cout << "  -------" << endl;
     cout << "Schrodinger" << endl;
     
     return;
