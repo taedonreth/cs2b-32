@@ -17,7 +17,7 @@ bool is_a_leap_year(int year);
 // number. So you must use the double datatype for it.
 double mean_of_3(int n1, int n2, int n3) {
 
-    double avg = (n1 + n2 + n3) / 3;
+    double avg = (n1 + n2 + n3) / 3.0;
     return avg;
 }
 
@@ -95,8 +95,14 @@ bool angles_make_triangle(int A, int B, int C) {
 // Return true if the year yyyy is a leap year and false if not.
 bool is_a_leap_year(int yyyy) {
 
-    if ((yyyy % 4 == 0) && (yyyy % 400 == 0)) {
+    if ((yyyy % 4 == 0) && (yyyy % 100 != 0)) {
         return true;
+    }
+
+    if (yyyy % 100 == 0) {
+        if ((yyyy % 4 == 0) && (yyyy % 400 == 0)) {
+            return true;
+        }
     }
 
     return false;
