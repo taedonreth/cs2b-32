@@ -32,47 +32,106 @@ private:
 
 public:
     String_List() {
-        
+        _head = new Node("_SENTINEL_");
+        _tail = _head;
+        _prev_to_current = _head;
+        _size = 0;
     }
 
     ~String_List() {
-        
+        clear();
+        delete _head;
     }
 
-    String_List *insert_at_current(std::string s) {
-    // TODO - Your code here
-    }
+    String_List* insert_at_current(std::string s) {
+        Node* new_node = new Node(s);
 
-    String_List *push_back(std::string s) {
-    // TODO - Your code here
+        new_node->next = _prev_to_current->next;
+        _prev_to_current->next = new_node;
+
+        if (_prev_to_current == _tail) {
+            _tail = new_node;
+        }
+
+        _size++;
+
+        return this;
     }
 
     String_List *push_front(std::string s) {
-    // TODO - Your code here
+        Node *saved_prev_to_current = _prev_to_current;
+
+        _prev_to_current = _head;
+        insert_at_current(s);
+        _prev_to_current = saved_prev_to_current;
+
+        return this;
     }
 
-    String_List *advance_current() {
-    // TODO - Your code here
+    String_List *push_back(std::string s) {
+        Node *saved_prev_to_current = _prev_to_current;
+
+        _prev_to_current = _tail;
+        insert_at_current(s);
+        _prev_to_current = saved_prev_to_current;
+        
+        return this;
     }
+
+    String_List* advance_current() {
+        if (_prev_to_current->next == nullptr) {
+            return nullptr;
+        }
+        _prev_to_current = _prev_to_current->next;
+        return this;
+    }
+
 
     std::string get_current() const {
-    // TODO - Your code here
+        if (_prev_to_current->next == nullptr) {
+            return "_SENTINEL_";
+        }
+        return _prev_to_current->next->data;
     }
 
     String_List *remove_at_current() {
-    // TODO - Your code here
+        Node* temp = _prev_to_current->next;
+
+        if (temp == nullptr) {
+            return this;
+        }
+
+        if (temp == _tail) {
+            _tail = _prev_to_current;
+        }
+
+        _prev_to_current->next = temp->next;
+        delete temp;
+        _size--;
+        return this;
     }
 
     size_t get_size() const {
-    // TODO - Your code here
+        return _size;
     }
 
     String_List *rewind() {
-    // TODO - Your code here
+        _prev_to_current = _head;
+        return this;
     }
 
     void clear() {
-    // TODO - Your code here
+        Node* current = _head->next;
+        while (current != nullptr) {
+            Node* next_node = current->next;
+            delete current;
+            current = next_node;
+        }
+
+        _tail = _head;
+        _prev_to_current = _head;
+        _head->next = nullptr;
+        _size = 0;
     }
 
     // Find a specific item. Does NOT change cursor.
@@ -84,14 +143,37 @@ public:
     // little more risk (what's the risk?)
     //
     std::string& find_item(std::string s) const {
-    // TODO - Your code here
+        static std::string sentinel = "_SENTINEL_";
+
+        Node* current = _head->next;
+        while (current != nullptr) {
+            if (current->data == s) {
+                return current->data;
+            }
+            current = current->next;
+        }
+        return sentinel;
     }
 
     // Print up to max_lines lines starting at _prev_to_current->next. If the caller
     // wants to print from the beginning of the list, they should rewind() it first.
     //
     std::string to_string() const {
-    // TODO - Your code here
+        std::ostringstream result;
+        result << "# String_List - " << _size << " entries total. Starting at cursor:";
+
+        Node *current = _prev_to_current->next;
+        int count = 0;
+        while (current != nullptr && count < 25) {
+            result << "\n" << current->data;
+            current = current->next;
+            count++;
+        }
+        if (current != nullptr) {
+            result << "\n...";
+        }
+        result << "\n";
+        return result.str();
     }
 
     friend class Tests; // Don't remove this line
