@@ -105,6 +105,7 @@ bool Automaton::equals(const Automaton& that) {
 }
 
 bool Automaton::make_next_gen(const vector<int>& current_gen, vector<int>& next_gen) {
+    // Ensure the automaton is valid and the current generation length is not even (except for length 0)
     if (!_is_valid || (current_gen.size() % 2 == 0 && current_gen.size() != 0)) {
         return false;
     }
@@ -118,24 +119,47 @@ bool Automaton::make_next_gen(const vector<int>& current_gen, vector<int>& next_
         return true;
     }
 
-    // Helper function to get parent combination index
-    auto get_combination = [&](int left, int center, int right) {
-        return (left << 2) | (center << 1) | right;
-    };
+    // Determine the number of bits to pad on each side
+    int padding_size = (_num_parents - 1) / 2;
 
     // Process the main window of non-extreme bits
     for (size_t i = 0; i < current_gen.size(); ++i) {
-        int left = (i == 0) ? _extreme_bit : current_gen[i - 1];
-        int center = current_gen[i];
-        int right = (i == current_gen.size() - 1) ? _extreme_bit : current_gen[i + 1];
-        next_gen.push_back(_rules[get_combination(left, center, right)]);
+        int left, center, right;
+
+        // Determine left, center, and right bits for current index i
+        if (i == 0) {
+            left = _extreme_bit;
+        } else {
+            left = current_gen[i - 1];
+        }
+
+        center = current_gen[i];
+
+        if (i == current_gen.size() - 1) {
+            right = _extreme_bit;
+        } else {
+            right = current_gen[i + 1];
+        }
+
+        // Compute the combination index
+        int combination = (left << 2) | (center << 1) | right;
+
+        // Append the next bit to next_gen
+        next_gen.push_back(_rules[combination]);
+    }
+
+    // If the next generation size is less than the required size, pad with the extreme bit
+    while (next_gen.size() < current_gen.size() + 2 * padding_size) {
+        next_gen.insert(next_gen.begin(), _extreme_bit);
+        next_gen.push_back(_extreme_bit);
     }
 
     // Update the extreme bit for the next generation
-    _extreme_bit = _rules[get_combination(_extreme_bit, _extreme_bit, _extreme_bit)];
+    _extreme_bit = _rules[(_extreme_bit << 2) | (_extreme_bit << 1) | _extreme_bit];
 
     return true;
 }
+
 
 
 string Automaton::get_first_n_generations(size_t n, size_t width) {
