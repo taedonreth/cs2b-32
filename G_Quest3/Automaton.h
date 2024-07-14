@@ -34,7 +34,7 @@ public:
 
     //Static Utilities
     static size_t pow_2(size_t n) { return 1 << n; }
-    //static size_t translate_n_bits_starting_at(const vector<int>& bits, size_t pos, size_t );
+    static size_t translate_n_bits_starting_at(const vector<int>& bits, size_t pos, size_t n);
 
     friend class Tests; //Don't remove this line
 };
