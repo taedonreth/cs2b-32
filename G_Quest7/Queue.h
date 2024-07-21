@@ -58,7 +58,6 @@ template <typename T> bool Queue<T>::dequeue() {
     if (is_empty()) {
         return false;
     }
-    _data[_head % _data.size()] = get_sentinel();
     _head++;
     return true;
 }
