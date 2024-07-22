@@ -5,9 +5,10 @@
 #ifndef Trie_h
 #define Trie_h
 
-#include <iostream>
-#include <sstream>
+#include <string>
 #include <vector>
+#include <iostream>
+#include <queue>
 
 class Trie {
 private:
